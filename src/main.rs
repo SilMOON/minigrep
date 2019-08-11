@@ -1,14 +1,21 @@
-use std::{env, fs};
+use std::{env, fs, process};
 
 fn main() {
     let args: Vec<String> = env::args().collect();
-    let config = parse_config(&args);
-    println!("Searching for: \"{}\".\nIn file: {}.", config.search_string, config.file_name);
+    let config = Config::new(&args).unwrap_or_else(|err| {
+        println!("Error in parsing arguments: {}", err);
+        process::exit(1);
+    });
+    println!("Searching for: \"{}\".\nIn file: {}.\n", config.search_string, config.file_name);
+    run(config);
+}
 
+fn run(config: Config) {
     let contents = fs::read_to_string(config.file_name)
         .expect("Failed to read the file.");
 
     println!("With text:\n{}", contents);
+
 }
 
 struct Config {
@@ -16,8 +23,13 @@ struct Config {
     file_name: String,
 }
 
-fn parse_config(args: &[String]) -> Config {
-    let search_string = args[1].clone();
-    let file_name = args[2].clone();
-    Config { search_string, file_name }
+impl Config {
+    fn new(args: &[String]) -> Result< Config, &'static str > {
+        if args.len() < 3 {
+            return Err("Not enough arguments!");
+        }
+        let search_string = args[1].clone();
+        let file_name = args[2].clone();
+        Ok( Config { search_string, file_name })
+    }
 }
