@@ -29,12 +29,14 @@ impl Config {
         let search_string = args[1].clone();
         let file_name = args[2].clone();
 
-        let mut case_sensitive = false;
+        let case_sensitive;
         if args.len() > 3 {
             if args[3] == String::from("--insensitive") {
                 case_sensitive = false;
             } else if args[3] == String::from("--sensitive") {
                 case_sensitive = true;
+            } else {
+                return Err("Found invalid arguments!");
             }
         } else {
             case_sensitive = env::var("CASE_INSENSITIVE").is_err();
