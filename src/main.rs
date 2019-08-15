@@ -4,12 +4,12 @@ use minigrep::Config;
 fn main() {
     let args: Vec<String> = env::args().collect();
     let config = Config::new(&args).unwrap_or_else(|err| {
-        println!("Error in parsing arguments: {}", err);
+        eprintln!("Error in parsing arguments: {}", err);
         process::exit(1);
     });
     println!("Searching for: \"{}\".\nIn file: {}.\n", config.search_string, config.file_name);
     if let Err(e) = minigrep::run(config) {
-        println!("Application error: {}", e);
+        eprintln!("Application error: {}", e);
         process::exit(1);
     }
 }
