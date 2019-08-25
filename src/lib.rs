@@ -22,43 +22,31 @@ pub struct Config {
 }
 
 impl Config {
-    pub fn new(args: &[String]) -> Result< Config, &'static str > {
-        let search_string;
-        let file_name;
+    pub fn new(mut args: std::env::Args) -> Result< Config, &'static str > {
+        args.next();
+
+        let search_string = match args.next() {
+            Some(arg) => arg,
+            None => return Err("Didn't get a query string"),
+        };
+
+        let file_name = match args.next() {
+            Some(arg) => arg,
+            None => return Err("Didn't get a file name"),
+        };
+
         let mut case_sensitive = env::var("CASE_INSENSITIVE").is_err();
 
-        let arg_length = args.len();
-
-        if arg_length < 3 {
-            return Err("Not enough arguments!");
-        } else if arg_length == 3 {
-            search_string = args[1].clone();
-            file_name = args[2].clone();
-        } else {
-            let mut sp_params_vec = vec![];
-            let mut args_vec = vec![];
-            for arg in args {
-                match &arg[..2] {
-                    "--"    => sp_params_vec.push(arg),
-                    _       => args_vec.push(arg),
-                }
-            }
-            if args_vec.len() > 3 {
-                return Err("Found invalid arguments!");
-            }
-
-            search_string = args_vec[1].clone();
-            file_name = args_vec[2].clone();
-
-            for sp_param in sp_params_vec {
-                match &sp_param[..] {
-                    "--insensitive"     => case_sensitive = false,
-                    "--sensitive"       => case_sensitive = true,
-                    _                   => return Err("Found invalid arguments!"),
-                }
+        for arg in args {
+            match &arg[..] {
+                "--sensitive"       => {case_sensitive = true;},
+                "--insensitive"     => {case_sensitive = false;},
+                _                   => return Err("Invalid argument detected!"),
             }
         }
-        Ok( Config { search_string, file_name, case_sensitive })
+
+        Ok(Config { search_string, file_name, case_sensitive })
+
     }
 }
 
