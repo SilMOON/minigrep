@@ -23,6 +23,7 @@ pub struct Config {
 
 impl Config {
     pub fn new(mut args: std::env::Args) -> Result< Config, &'static str > {
+        //ignore the first argument which is the name of the program
         args.next();
 
         let search_string = match args.next() {
