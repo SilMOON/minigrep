@@ -52,24 +52,16 @@ impl Config {
 }
 
 fn search<'a>(search_string: &str, contents: &'a str) -> Vec<&'a str>{
-    let mut results: Vec<&str> = Vec::new();
-    for line in contents.lines() {
-        if line.contains(search_string) {
-            results.push(line);
-        }
-    }
-    results
+    contents.lines()
+            .filter(|line| line.contains(search_string))
+            .collect()
 }
 
 fn search_case_insensitive<'a>(search_string: &str, contents: &'a str) -> Vec<&'a str>{
-    let mut results: Vec<&str> = Vec::new();
     let search_string = search_string.to_lowercase();
-    for line in contents.lines() {
-        if line.to_lowercase().contains(&search_string) {
-            results.push(line);
-        }
-    }
-    results
+    contents.lines()
+            .filter(|line| line.to_lowercase().contains(&search_string))
+            .collect()
 }
 
 
