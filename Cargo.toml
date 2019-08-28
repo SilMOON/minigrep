@@ -4,7 +4,7 @@ version = "0.1.0"
 authors = ["SilMOON <chenminghui8899@gmail.com>"]
 edition = "2018"
 description = "A very simple grep program."
-license = "MIT"
+license = "BSD-3-Clause"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
